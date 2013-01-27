@@ -1,0 +1,39 @@
+<html>
+<head><title>task.js</title></head>
+<script type="application/javascript" src="../lib/task.js"></script>
+<script type="application/javascript;version=1.8">
+
+    var { spawn, close } = task;
+
+    var nbThreads = 100;
+    var maxTime = 2000; // msec
+
+
+    for(var i=0; i <  nbThreads; i++){
+        spawn((function(i) {
+            return function(){
+              console.log(">> ",i);
+              yield sleep( i / (nbThreads / maxTime));
+            };
+        })(i));
+        if (i === nbThreads - 1) 
+            console.log("all spawned");
+    }
+
+    var ts = [];
+    for(var i=0; i <  nbThreads; i++){
+        ts[i] = spawn((function(i) {
+            return function(){
+              yield sleep( i / (nbThreads / maxTime));
+              //console.log(i);
+              ts[i].close()
+            };
+        })(i));
+        if (i === nbThreads - 1) console.log("all spawned");
+    } 
+
+
+</script>
+<body>
+</body>
+</html>
